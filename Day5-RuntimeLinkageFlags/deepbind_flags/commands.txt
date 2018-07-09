@@ -1,0 +1,32 @@
+
+In libinit.so
+-------------
+Function Having No Dependency - x()
+Function Having Dependency    - y()
+Calls x() internally.
+Since x() is locally present so it can be resolved.
+
+In libdep.so
+------------
+x() is present.
+This is meant to be used as a global symbol.
+This library symbols are set as global with RTLD_GLOBAL flags
+
+Without flag RTLD_DEEPBIND in libinit.so loading
+------------------------------------------------
+Function Called -> y
+--> Succeeds and gets called from libinit.so
+Function Called -> x
+--> Succeeds and gets called from libdep.so i.e global has
+    more preference over the local x() already present in libinit.so
+
+With flag RTLD_DEEPBIND in libinit.so loading
+---------------------------------------------
+Function Called -> x
+--> Succeeds and gets called from libinit.so
+Function Called -> y
+--> Succeeds and gets called from the local libinit.so
+    Global symbol is overridden with the use of this flag
+
+We can see the contents of one.c and two.c to understand the flow
+more accurately.

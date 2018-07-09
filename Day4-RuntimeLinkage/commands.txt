@@ -1,0 +1,50 @@
+touch one.c two.c dlapp.c
+--> Create some test functions to be part of library
+vi one.c
+--> Has add and sub functions
+vi two.c
+--> Has mul and div functions
+gcc -c -fPIC one.c 
+--> Position Independent Binary Relocatable to be created
+gcc -c -fPIC two.c 
+--> Position Independent Binary Relocatable to be created
+gcc -shared -o libinit.so one.o two.o
+--> Create shared library
+vi dlapp.c
+--> Sample code for calling runtime linkage of single function "add"
+    For more functions we need to take function pointers for each
+    For Runtime linkage direct calls are not allowed.
+gcc dlapp.c -o app -ldl
+--> Compile with -ldl flag which tells not to load any library
+./app
+--> app has getchar() for step by step execution.
+    Execute first step and wait to look at subsequent commands in /proc
+    given below
+
+/* Open a separate terminal and run this commands */
+ps -ax
+--> Shows PID of our process called app.
+    Note it down.
+    Eg. 8055
+
+cat /proc/filesystems
+--> Shows list of storage and logical filesystems
+    Ones marked with nodev are logical filesystems
+
+cd /proc
+--> Change directory to proc
+
+ls
+--> See the directories.
+    The numbered directories are specific to each process currently running
+    Find 8055 directory there.
+
+cd /proc/8055
+--> Browse to this directory
+
+cat maps
+--> See code,data,stack and heap of our app and the .so libraries.
+    Every step we take in the other terminal to run app, we can see the so getting
+    loaded and unloaded here.
+    Once the app exits then this directory also disapppears from /proc
+

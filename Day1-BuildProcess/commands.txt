@@ -1,0 +1,42 @@
+1. /* .c File */
+   file app.c
+   --> app.c: C source, ASCII text
+
+2. /* .i File */
+   gcc -E app.c -o app.i
+   file app.i
+   --> app.i: C source, ASCII text
+
+   gcc -E app.c -o app.i -v
+   --> Shows detailed information about tool used internally, standard path of headers
+   --> cc1 tool is used - GNU C11 Compiler
+
+3. /* .s File */
+   gcc -S app.i -o app.s
+   file app.s
+   --> app.s: assembler source, ASCII text
+   
+   gcc -S app.i -o app.s -v
+   --> cc1 tool is used - GNU C11 Compiler
+
+4. /* .o File */
+   gcc -c app.s -o app.o
+   file app.o
+   --> app.o: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), not stripped
+
+   gcc -c app.s -o app.o -v
+   --> as tool is used   - GNU Assembler
+
+   objdump -D app.o
+   --> Dissembly of the relocatable file - Offset Address, No Runtime Code Sections
+
+5. /* elf File */
+   gcc app.o -o app
+   file app
+   --> app: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=edf8cf9798c96abcc68cece2ec032d8e1a5c12db, not stripped
+
+   gcc app.o -o app -v
+   --> ld-linux.so.2 - Link Loader or Interpreter
+
+   readelf -a app
+   --> Header shows a all the information about the elf file

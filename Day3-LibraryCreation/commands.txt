@@ -1,0 +1,98 @@
+touch one.c two.c app.c 
+--> Create the files for writing the source code
+
+vi one.c 
+--> File contains add, sub functions
+
+vi two.c
+--> File contains mul, div functions
+
+gcc -c one.c 
+--> Create relocatable,default one.o is created
+
+gcc -c two.c 
+--> Create relocatable,default two.o is created
+
+ar rcs libtest.a one.o two.o
+--> Use ar utility to create a static library
+
+ar -t libtest.a
+--> Shows the files present in the archive or .a file
+    one.o
+    two.o
+
+nm -s libtest.a
+--> Shows the functions/symbols available in the library
+    
+    Archive index:
+    add in one.o
+    sub in one.o
+    mul in two.o
+    div in two.o
+
+    one.o:
+    00000000 T add
+    0000000d T sub
+
+    two.o:
+    0000000c T div
+    00000000 T mul
+
+file libtest.a
+-->libtest.a: current ar archive
+
+readelf -a libtest.a
+--> Header and other information about file
+
+du -b libtest.a
+--> 2096 bytes Only for comparison
+
+gcc -c -fPIC one.c 
+--> Create Position Independent Binary Relocatable Code
+
+gcc -c -fPIC two.c 
+--> Create Position Independent Binary Relocatable Code
+
+gcc -shared -o libtest.so one.o two.o
+--> Create a shared object or dynamic library
+
+ar -t libtest.so
+--> ar: libtest.so: File format not recognized
+
+nm -s libtest.so 
+--> Detailed Output
+
+file libtest.so
+--> libtest.so: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked, BuildID[sha1]=43a960fc0f9617f3f6f7c2ff3db08bba9b4c1f5a, not stripped
+
+readelf -a libtest.so
+--> Header and other information about file
+
+du -b libtest.so
+-->6960 bytes Only for comparison
+ 
+vi app.c
+--> Create the program to call some of the library functions
+
+gcc app.c -o app ./libtest.so 
+--> Create executable with dynamic library
+
+./app
+--> Execute
+ 
+gcc app.c -o appst ./libtest.a 
+--> Create executable with static library
+
+./appst 
+--> Execute
+
+/* For Prototype Mismatch of library function, the compiler does not throw any error */
+/* This is the reason to use headers */
+
+objdump -D app
+--> call   8048480 <add@plt>
+    Dynamic Linkage
+
+objdump -D appst 
+--> call   804850f <add>
+    Absolute/Static Linkage

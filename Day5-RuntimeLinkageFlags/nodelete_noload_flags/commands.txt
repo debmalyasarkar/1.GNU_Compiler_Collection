@@ -1,0 +1,21 @@
+
+In libinit.so
+-------------
+Function Having A Static Variable - x()
+
+With flag RTLD_NODELETE in first call to load library
+------------------------------------------------------
+The library is not unloaded on calling the unload function.
+The value of the static variable is retained.
+
+With flag RTLD_NOLOAD in second call to load library
+----------------------------------------------------
+The library is not loaded again. The existing copy is used.
+Accessing the static variable now gives the incremented value
+over the previously retained value.
+
+Cross Checking
+---------------
+To check we can comment this two flags and run the code.
+We will observe that both times the static variable gives the 
+initialized value.

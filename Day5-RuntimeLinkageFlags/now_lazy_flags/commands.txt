@@ -1,0 +1,33 @@
+
+In libinit.so
+-------------
+Function Having No Dependency - x()
+Function Having Dependency    - y()
+
+In libdep.so
+------------
+a() and b() functions are present.
+y() calls b() so its dependent
+
+With flag RTLD_NOW
+-------------------
+Function Called -> x
+--> dlopen() fails
+Function Called -> y
+--> dlopen() fails
+
+With flag RTLD_LAZY
+--------------------
+Function Called -> x
+--> dlopen() succeeds
+    Process succeeds
+Function Called -> y
+--> dlopen() succeeds
+    Gives runtime failure when function is called
+
+When dependent library is loaded then also function fails
+because the symbols of the dependent library are not shared
+with the calling library.
+To make it work RTLD_GLOBAL must be used.
+-> Security Concern to run untrusted code from malicious library
+-> Calling Library may have same symbol

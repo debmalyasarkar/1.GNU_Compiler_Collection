@@ -1,0 +1,14 @@
+vi runtimeSeq.c
+--> Create sample code to simulate runtime sequence
+
+gcc runtimeSeq.c -o runtimeSeq
+--> Compile to create executable
+    Linker finds multiple definition of runtime and compilation fails
+
+gcc runtimeSeq.c -o runtimeSeq -nostartfiles
+--> -nostartfiles flag tells linker to skip default runtime files
+    Compiles successfully
+
+./runtimeSeq 
+--> See the output sequence of runtime functions and code
+
